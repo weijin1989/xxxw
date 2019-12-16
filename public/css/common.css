@@ -1,0 +1,51 @@
+.p_15{padding:15px}
+.back_fff{background:#fff}
+.error{color:red}
+.p_l_15{padding-left:15px}
+/*清除浮动*/
+.clearfix{zoom:1;}
+.clearfix:after{display:block; overflow:hidden; clear:both; height:0; visibility:hidden; content:".";}
+.ibox-title {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #ffffff;
+    border-image: none;
+    border-width: 3px 0 0;
+    color: inherit;
+    border-bottom:1px solid #e7eaec;
+    margin-bottom:15px;
+}
+.ibox-title h3{
+    padding:0 0 10px 10px;
+    font-size:20px;
+    font-weight: bold;
+}
+.ibox-title .btn
+{
+    position: absolute;
+    right: 15px;
+    top: 23px;
+}
+.ibox-content{margin-top:15px}
+
+.hr-line-solid {
+    border-bottom: 1px solid #e7eaec;
+    background-color: rgba(0, 0, 0, 0);
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.order-table{width:100%}
+.order-table th{text-align: right;width:10%;font-weight: normal}
+.order-table td{border:0;padding:5px 0;padding-left:10px}
+.order-table1{width:100%}
+.image-size-label {margin-top:10px}
+.select_input{
+    width: 90%;
+    height: 34px;
+    background-color: #FFFFFF;
+    border: 1px solid #D5D5D5;
+    padding: 6px 12px;
+    font-size: 14px;
+}
