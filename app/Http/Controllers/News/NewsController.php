@@ -140,7 +140,7 @@ class NewsController extends Controller
             ));
             foreach($list as $k=>$l) {
                 array_push($export_data, array(
-                    $l->title,$users[$l->at_id],$l->addtime,$medias[$l->media_id],$l->cat_page,$l->text_size,config('configure.status')[$l->status],
+                    $l->title,$users[$l->at_id],$l->addtime,$medias[$l->media_id]??'',$l->cat_page,$l->text_size,config('configure.status')[$l->status],
                     $l->created_at
                 ));
             }
@@ -240,7 +240,7 @@ class NewsController extends Controller
             ));
             foreach($list as $k=>$l) {
                 array_push($export_data, array(
-                    $l->title,$medias[$l->media_id],$l->cat_page,$l->addtime,$l->text_size,$l->prize_money,
+                    $l->title,$medias[$l->media_id]??'',$l->cat_page,$l->addtime,$l->text_size,$l->prize_money,
                     config('configure.status')[$l->status],$l->created_at,$l->confirmation
                 ));
             }
@@ -413,7 +413,7 @@ class NewsController extends Controller
             ));
             foreach($list as $k=>$l) {
                 array_push($export_data, array(
-                    $medias[$l->media_id],$l->addtime,$l->cat_page,$l->title,$users[$l->at_id],
+                    $medias[$l->media_id]??'',$l->addtime,$l->cat_page,$l->title,$users[$l->at_id],
                     $l->text_size,$l->prize_money,$l->confirmation
                 ));
             }
