@@ -90,13 +90,15 @@
                                     </div>
                                     {{--<div class="ibox-tools clearfix">--}}
                                     <div style="padding:10px 0">
-                                        总条数：{{$list->total()}}
+                                        总条数：{{$list->total()}}<br/><br/>
+                                        <button type="button" id="all_queren" class="btn btn-primary btn-xs"> 一键确认 </button>
                                     </div>
                                     {{--</div>--}}
                                     <div class="fixed-table-container" style="margin-top:10px">
                                         <table class="table table-striped ">
                                             <thead>
                                             <tr>
+                                                <th><input type="checkbox" data-id="1" id="selectAll"></th>
                                                 <th>新闻标题</th>
                                                 <th>媒体名称</th>
                                                 <th>栏目版面</th>
@@ -142,6 +144,7 @@
                                             @if(count($list)>0)
                                                 @foreach($list as $k=>$l)
                                                     <tr>
+                                                        <td><input type="checkbox" class="owners" name="id[]" value="{{$l->id}}"></td>
                                                         <td>{{$l->title}}</td>
                                                         {{--<td>{{$l->addtime}}</td>--}}
                                                         <td>{{$medias[$l->media_id]??""}}</td>
@@ -189,6 +192,42 @@
         </div>
         <!-- end: PAGE -->
     </div>
+
+
+    <div class="modal fade" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">一键确认</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped modal_table">
+                        <tr>
+                            <th>确认方式</th>
+                            <td>
+                                <select id="qr_status" class="form-control required"  name="qr_status">
+                                    @foreach(config('configure.confirm_status') as $k=>$v)
+                                        <option class="option" value="{{$k}}">{{$v}}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>确认意见</th>
+                            <td>
+                                <textarea id="confirmation" class="form-control" maxlength="250" style="height:120px"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary sub_but">确认</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
 @endsection
 @section('jscontent')
     <script type="text/javascript" src="{{ asset('/plugins/ztree/jquery.ztree.all.min.js') }}"></script>
@@ -209,6 +248,82 @@
             }
 
         });
+
+
+
+
+        //全选/取消全选
+        $("#selectAll").click(function () {
+            var id=$(this).data('id');
+            if(id==1) {
+                $(".owners").each(function () {
+                    $(this).prop('checked', true);//
+                });
+                $("#selectAll").data('id',0);
+            }else{
+                $(".owners").each(function () {
+                    $(this).prop('checked', false);//
+                });
+                $("#selectAll").data('id',1);
+            }
+            getId();
+        });
+        function getId(){
+            vals=[];
+            $(".owners").each(function () {
+                if($(this).is(':checked')) {
+                    vals.push($(this).val());
+                }
+            });
+//            console.log(vals);
+        }
+        $(".owners").each(function () {
+            $(this).click(function () {
+                getId();
+            })
+        });
+
+        //提交
+        $('#all_queren').click(function () {
+            if(vals.length==0){
+                alert('请选择要操作的稿件');
+                return false
+            }
+            $('.modal').modal('show');
+        });
+
+        var is_sub=0;
+        $('.sub_but').click(function () {
+            if(is_sub==1){
+                return false;
+            }
+            is_sub=1;
+            var status=$('#qr_status').val();
+            var confirmation=$('#confirmation').val();
+            $.ajax({
+                async: false,
+                type: 'POST',
+                url: '/news/confirmAll',
+                dataType: 'json',
+                data: {ids: vals,status: status, confirmation: confirmation, _token: post_token},
+                success: function (data) {
+                    if (data['code'] != 0) {
+                        pop('提示', data['msg'], 3);
+                        return false;
+                    }
+                    pop('提示', '操作成功', 1);
+                    window.location.reload();
+
+
+                },
+                error: function () {
+                    pop('提示', '网络异常', 3)
+                }
+            });
+        });
+
+
+
         var start = {
             elem: '#starttime',
             format: 'YYYY-MM-DD',

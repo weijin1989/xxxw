@@ -128,6 +128,23 @@ class NewsController extends Controller
         echo json_encode($return_data);
         return;
     }
+
+    //修改状态
+    public function confirmAll(Request $request){
+        $id=$request->input('ids');
+        $status=$request->input('status');
+        $confirmation=$request->input('confirmation');
+        $return_data =  $this->ajax_result;
+        if($id == ""){
+            $return_data['code']=-1;
+            $return_data['msg']='参数错误';
+            echo json_encode($return_data);
+            return;
+        }
+        News::whereIn('id',$id)->update(['status'=>$status,'confirmation'=>$confirmation]);
+        echo json_encode($return_data);
+        return;
+    }
     //导出 記者上稿
     public function export_csv($list,$export_name='新闻上稿'){
         ini_set("max_execution_time", "3600");
